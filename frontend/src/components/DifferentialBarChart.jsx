@@ -19,27 +19,27 @@ function CustomChartTooltip({ active, payload }) {
     const mapping = CANCER_CODE_MAPPING[data.name] || {};
 
     return (
-      <div className="bg-white border border-slate-100 shadow-[0_4px_16px_rgba(0,0,0,0.08)] rounded-xl p-3 text-xs font-sans max-w-xs z-50">
-        <div className="font-semibold text-slate-800 border-b border-slate-100 pb-1.5 mb-2 flex items-center justify-between gap-2">
+      <div className="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] shadow-md rounded-xl p-3 text-xs font-sans max-w-xs z-50">
+        <div className="font-bold text-[var(--foreground)] border-b border-[var(--border)] pb-1.5 mb-2 flex items-center justify-between gap-2">
           <span>{data.name}</span>
-          <span className="font-mono text-[10px] text-teal-800 bg-teal-50 px-1.5 py-0.5 rounded-md border border-teal-200/50">
+          <span className="font-mono text-[10px] text-[var(--sidebar-accent-foreground)] bg-[var(--sidebar-accent)] px-2 py-0.5 rounded-full font-bold border border-teal-200/50 dark:border-teal-700/50">
             {mapping.oncoTree || 'TUMOR'}
           </span>
         </div>
         <div className="space-y-1.5">
-          <div className="flex justify-between items-center text-slate-600">
+          <div className="flex justify-between items-center text-[var(--muted-foreground)]">
             <span>Calibrated Probability:</span>
-            <span className="font-mono font-bold text-teal-900">
+            <span className="font-mono font-bold text-[var(--foreground)]">
               {data.probability.toFixed(1)}%
             </span>
           </div>
-          <div className="flex justify-between items-center text-slate-400 text-[11px]">
-            <span>System:</span>
-            <span className="text-slate-600">{mapping.system || 'Solid Tumor'}</span>
+          <div className="flex justify-between items-center text-[var(--muted-foreground)] text-[11px]">
+            <span>Lineage System:</span>
+            <span className="text-[var(--foreground)] font-medium">{mapping.system || 'Solid Tumor'}</span>
           </div>
-          <div className="flex justify-between items-center text-slate-400 text-[11px]">
+          <div className="flex justify-between items-center text-[var(--muted-foreground)] text-[11px]">
             <span>ICD-O-3:</span>
-            <span className="font-mono text-slate-600">{mapping.icdO3 || '8000/3'}</span>
+            <span className="font-mono text-[var(--muted-foreground)]">{mapping.icdO3 || '8000/3'}</span>
           </div>
         </div>
       </div>
@@ -60,112 +60,110 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
     code: CANCER_CODE_MAPPING[item.name]?.code || 'UNK',
   }));
 
+  // Clinova Bed Occupancy dynamic color scheme
+  const getBarColor = (index) => {
+    if (index === 0) return '#dc2626'; // Rank 1: Crimson / Coral Red
+    if (index === 1 || index === 2) return '#d97706'; // Rank 2 & 3: Warm Amber / Gold
+    return '#0f766e'; // Rank 4 & 5: Deep Muted Teal
+  };
+
   return (
-    <div className={`bg-white rounded-xl border border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.03)] transition-opacity duration-150 ${
+    <div className={`bg-[var(--card)] rounded-xl p-4 border border-[var(--border)] shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-opacity duration-150 ${
       isCalculating ? 'opacity-60' : 'opacity-100'
     }`}>
       {/* Header */}
-      <div className="px-5 py-3 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-          <h2 className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase flex items-center">
-            Differential Distribution (Top 5)
-            <Tooltip text="Posterior probability distribution across top candidate lineages, calibrated via multi-class Platt scaling." />
-          </h2>
+      <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+        <div>
+          <h3 className="text-sm sm:text-base font-semibold text-[var(--foreground)] tracking-tight flex items-center">
+            Top 5 Differential Diagnoses
+            <Tooltip text="Posterior probability distribution across top candidate cancer lineages, calibrated via Platt scaling." />
+          </h3>
+          <p className="text-xs text-[var(--muted-foreground)]">
+            Differential likelihood across reference cohorts (Clinova Color Mapping)
+          </p>
         </div>
 
         {/* View Toggle */}
-        <div className="bg-slate-100/70 p-0.5 rounded-lg inline-flex">
+        <div className="bg-[var(--muted)] p-1 rounded-xl inline-flex space-x-1">
           <button
             type="button"
             onClick={() => setViewMode('chart')}
-            className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-all flex items-center space-x-1.5 ${
+            className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all flex items-center space-x-1.5 cursor-pointer ${
               viewMode === 'chart'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-[var(--card)] text-[var(--sidebar-accent-foreground)] shadow-xs'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
             }`}
           >
-            <BarChart3 className="w-3 h-3" />
+            <BarChart3 className="w-3.5 h-3.5" />
             <span>Chart</span>
           </button>
           <button
             type="button"
             onClick={() => setViewMode('table')}
-            className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-all flex items-center space-x-1.5 ${
+            className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all flex items-center space-x-1.5 cursor-pointer ${
               viewMode === 'table'
-                ? 'bg-white text-slate-900 shadow-xs font-semibold'
-                : 'text-slate-500 hover:text-slate-900'
+                ? 'bg-[var(--card)] text-[var(--sidebar-accent-foreground)] shadow-xs'
+                : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
             }`}
           >
-            <Table className="w-3 h-3" />
-            <span>Audit</span>
+            <Table className="w-3.5 h-3.5" />
+            <span>Audit Table</span>
           </button>
         </div>
       </div>
 
-      <div className="p-5">
+      <div className="pt-3">
         {viewMode === 'chart' ? (
           <div>
-            <div className="h-60 sm:h-64 w-full">
+            <div className="h-64 sm:h-72 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={chartData}
                   layout="vertical"
-                  margin={{ top: 6, right: 35, left: 10, bottom: 6 }}
+                  margin={{ top: 8, right: 35, left: 10, bottom: 8 }}
                 >
-                  {/* Premium Teal & Slate Linear Gradients */}
-                  <defs>
-                    <linearGradient id="topTealGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#0f766e" />
-                      <stop offset="100%" stopColor="#14b8a6" />
-                    </linearGradient>
-                    <linearGradient id="subtleSlateGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#64748b" />
-                      <stop offset="100%" stopColor="#94a3b8" />
-                    </linearGradient>
-                  </defs>
-
                   <XAxis
                     type="number"
                     domain={[0, 100]}
-                    tick={{ fill: '#94a3b8', fontSize: 10, fontFamily: 'monospace' }}
+                    tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'monospace' }}
                     tickFormatter={(val) => `${val}%`}
-                    axisLine={{ stroke: '#f1f5f9' }}
-                    tickLine={{ stroke: '#f1f5f9' }}
+                    axisLine={{ stroke: '#e2e8f0' }}
+                    tickLine={{ stroke: '#e2e8f0' }}
                   />
                   <YAxis
                     type="category"
                     dataKey="name"
                     width={155}
-                    tick={{ fill: '#334155', fontSize: 11, fontWeight: 500 }}
-                    axisLine={{ stroke: '#f1f5f9' }}
+                    tick={{ fill: '#334155', fontSize: 11, fontWeight: 600 }}
+                    axisLine={{ stroke: '#e2e8f0' }}
                     tickLine={false}
                   />
-                  <RechartsTooltip content={<CustomChartTooltip />} cursor={{ fill: '#f8fafc', opacity: 0.8 }} />
+                  <RechartsTooltip content={<CustomChartTooltip />} cursor={{ fill: 'var(--muted)', opacity: 0.6 }} />
                   
                   {/* Subtle Translucent Dashes for 20% Threshold */}
                   <ReferenceLine
                     x={20}
-                    stroke="#cbd5e1"
+                    stroke="#94a3b8"
                     strokeDasharray="2 3"
-                    strokeOpacity={0.7}
+                    strokeOpacity={0.6}
                     label={{
-                      value: '20% Decision Threshold',
-                      fill: '#94a3b8',
+                      value: '20% Actionability Threshold',
+                      fill: '#64748b',
                       fontSize: 10,
                       position: 'insideTopRight',
                     }}
                   />
                   
+                  {/* Dynamic Clinova Bars */}
                   <Bar
                     dataKey="probability"
-                    radius={[0, 4, 4, 0]}
-                    barSize={18}
+                    radius={[0, 6, 6, 0]}
+                    barSize={20}
                   >
                     {chartData.map((entry, index) => (
                       <Cell
                         key={`cell-${entry.name}`}
-                        fill={index === 0 ? 'url(#topTealGrad)' : 'url(#subtleSlateGrad)'}
+                        fill={getBarColor(index)}
                       />
                     ))}
                   </Bar>
@@ -173,85 +171,98 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
               </ResponsiveContainer>
             </div>
 
-            {/* Seamless Visual Grouping (Soft shaded gray background blocks) */}
-            <div className="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              {differentialDiagnoses.map((diag, idx) => (
-                <div
-                  key={diag.name}
-                  className={`p-2.5 rounded-xl text-left transition-colors ${
-                    idx === 0 
-                      ? 'bg-teal-50/70 border border-teal-200/60' 
-                      : 'bg-slate-50/70 border border-slate-100'
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                    <span className="font-semibold text-slate-700">#{idx + 1}</span>
-                    <span>{CANCER_CODE_MAPPING[diag.name]?.code || 'CANC'}</span>
+            {/* Metric Summary Cards Grid with Matching Clinova Palette */}
+            <div className="mt-4 pt-3 border-t border-[var(--border)] grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              {differentialDiagnoses.map((diag, idx) => {
+                const isRank1 = idx === 0;
+                const isRank23 = idx === 1 || idx === 2;
+
+                return (
+                  <div
+                    key={diag.name}
+                    className={`p-3 rounded-xl text-left transition-colors border ${
+                      isRank1 
+                        ? 'bg-rose-50/70 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60' 
+                        : isRank23 
+                        ? 'bg-amber-50/70 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60' 
+                        : 'bg-[var(--sidebar-accent)]/50 border-teal-200 dark:border-teal-900/60'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-[10px] text-[var(--muted-foreground)] font-mono">
+                      <span className={`font-bold ${isRank1 ? 'text-rose-700 dark:text-rose-300' : isRank23 ? 'text-amber-700 dark:text-amber-300' : 'text-[var(--sidebar-accent-foreground)]'}`}>
+                        #{idx + 1}
+                      </span>
+                      <span>{CANCER_CODE_MAPPING[diag.name]?.code || 'CANC'}</span>
+                    </div>
+                    <div className="text-xs font-semibold text-[var(--foreground)] truncate mt-1" title={diag.name}>
+                      {diag.name}
+                    </div>
+                    <div className={`text-sm font-mono font-bold tracking-tight mt-0.5 ${
+                      isRank1 ? 'text-rose-700 dark:text-rose-300' : isRank23 ? 'text-amber-700 dark:text-amber-300' : 'text-[var(--sidebar-accent-foreground)]'
+                    }`}>
+                      {diag.probability.toFixed(1)}%
+                    </div>
                   </div>
-                  <div className="text-[11px] font-medium text-slate-800 truncate mt-1" title={diag.name}>
-                    {diag.name}
-                  </div>
-                  <div className="text-xs font-mono font-bold tracking-tight text-slate-900 mt-0.5">
-                    {diag.probability.toFixed(1)}%
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         ) : (
           /* Tabular Audit Table */
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-100 text-xs">
-              <thead className="bg-slate-50/60">
+            <table className="min-w-full divide-y divide-[var(--border)] text-xs">
+              <thead className="bg-[var(--muted)]/50 rounded-xl">
                 <tr>
-                  <th scope="col" className="px-3 py-2 text-left font-semibold text-slate-400 uppercase tracking-widest text-[10px]">
+                  <th scope="col" className="px-3 py-2 text-left font-semibold text-[var(--muted-foreground)] uppercase tracking-wider text-[10px]">
                     Rank
                   </th>
-                  <th scope="col" className="px-3 py-2 text-left font-semibold text-slate-400 uppercase tracking-widest text-[10px]">
+                  <th scope="col" className="px-3 py-2 text-left font-semibold text-[var(--muted-foreground)] uppercase tracking-wider text-[10px]">
                     Candidate Entity
                   </th>
-                  <th scope="col" className="px-3 py-2 text-left font-semibold text-slate-400 uppercase tracking-widest text-[10px]">
+                  <th scope="col" className="px-3 py-2 text-left font-semibold text-[var(--muted-foreground)] uppercase tracking-wider text-[10px]">
                     Code
                   </th>
-                  <th scope="col" className="px-3 py-2 text-left font-semibold text-slate-400 uppercase tracking-widest text-[10px]">
+                  <th scope="col" className="px-3 py-2 text-left font-semibold text-[var(--muted-foreground)] uppercase tracking-wider text-[10px]">
                     System
                   </th>
-                  <th scope="col" className="px-3 py-2 text-right font-semibold text-slate-400 uppercase tracking-widest text-[10px]">
+                  <th scope="col" className="px-3 py-2 text-right font-semibold text-[var(--muted-foreground)] uppercase tracking-wider text-[10px]">
                     Probability
                   </th>
-                  <th scope="col" className="px-3 py-2 text-right font-semibold text-slate-400 uppercase tracking-widest text-[10px]">
+                  <th scope="col" className="px-3 py-2 text-right font-semibold text-[var(--muted-foreground)] uppercase tracking-wider text-[10px]">
                     Cumulative
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white font-mono text-xs">
+              <tbody className="divide-y divide-[var(--border)] bg-[var(--card)] font-mono text-xs">
                 {differentialDiagnoses.map((diag, idx) => {
                   const mapping = CANCER_CODE_MAPPING[diag.name] || {};
                   const cumulative = differentialDiagnoses
                     .slice(0, idx + 1)
                     .reduce((sum, item) => sum + item.probability, 0);
 
+                  const isRank1 = idx === 0;
+
                   return (
                     <tr
                       key={diag.name}
-                      className={idx === 0 ? 'bg-teal-50/40 font-medium' : 'hover:bg-slate-50/50'}
+                      className={isRank1 ? 'bg-rose-50/40 dark:bg-rose-950/20 font-medium' : 'hover:bg-[var(--muted)]/50'}
                     >
-                      <td className="px-3 py-2 text-slate-400">
+                      <td className="px-3 py-2.5 text-slate-400 font-bold">
                         #{idx + 1}
                       </td>
-                      <td className="px-3 py-2 font-sans text-slate-900 font-medium">
+                      <td className="px-3 py-2.5 font-sans text-[var(--foreground)] font-semibold">
                         {diag.name}
                       </td>
-                      <td className="px-3 py-2 text-slate-500">
+                      <td className="px-3 py-2.5 text-[var(--muted-foreground)]">
                         {mapping.oncoTree || 'TUMOR'}
                       </td>
-                      <td className="px-3 py-2 font-sans text-slate-500">
+                      <td className="px-3 py-2.5 font-sans text-[var(--muted-foreground)]">
                         {mapping.system || 'Solid'}
                       </td>
-                      <td className="px-3 py-2 text-right font-bold tracking-tight text-slate-900">
+                      <td className="px-3 py-2.5 text-right font-bold tracking-tight text-[var(--foreground)]">
                         {diag.probability.toFixed(1)}%
                       </td>
-                      <td className="px-3 py-2 text-right text-slate-400">
+                      <td className="px-3 py-2.5 text-right text-slate-400">
                         {cumulative.toFixed(1)}%
                       </td>
                     </tr>

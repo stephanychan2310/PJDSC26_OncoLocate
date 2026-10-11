@@ -1,10 +1,14 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import TopMetricCards from './components/TopMetricCards';
 import ClinicalInputForm from './components/ClinicalInputForm';
 import HeroResultCard from './components/HeroResultCard';
 import DifferentialBarChart from './components/DifferentialBarChart';
 import ExplainabilityCard from './components/ExplainabilityCard';
+import CaseCohortView from './components/CaseCohortView';
+import PatientProtocolView from './components/PatientProtocolView';
+import SettingsView from './components/SettingsView';
 import ModelMetadataModal from './components/ModelMetadataModal';
 import { 
   predictTumorOfOrigin, 
@@ -43,7 +47,16 @@ export default function App() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [liveInference, setLiveInference] = useState(true);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'cohort' | 'protocol' | 'settings'
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
 
   // Results state
   const [predictionResult, setPredictionResult] = useState(() => 
@@ -57,7 +70,7 @@ export default function App() {
       const result = predictTumorOfOrigin(currentInputs);
       setPredictionResult(result);
       setIsCalculating(false);
-    }, 100);
+    }, 120);
 
     return () => clearTimeout(timer);
   }, []);
@@ -93,91 +106,119 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] flex font-sans text-slate-900 antialiased selection:bg-teal-100 selection:text-teal-900">
+    <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       
-      {/* 1. Persistent Left Sidebar (240px Desktop) */}
-      <div className="hidden lg:block shrink-0">
-        <Sidebar
-          currentPresetId={currentPresetId}
-          onSelectPreset={handleSelectPreset}
-          onOpenModelInfo={() => setIsSpecsOpen(true)}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
-      </div>
+      {/* 1. Clinova Fixed Navigation Spine (260px) */}
+      <Sidebar
+        currentPresetId={currentPresetId}
+        onSelectPreset={handleSelectPreset}
+        onOpenModelInfo={() => setIsSpecsOpen(true)}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
-      {/* 2. Main Workbench Workspace */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      {/* 2. Main content shell */}
+      <div className="flex-1 min-w-0 flex flex-col">
         
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1560px] w-full mx-auto">
+        {/* Top Bar Header */}
+        <Header
+          onSelectPreset={handleSelectPreset}
+          onResetBaseline={handleResetBaseline}
+          isCalculating={isCalculating}
+          currentPresetId={currentPresetId}
+          onPrint={handlePrint}
+          isDark={isDark}
+          onToggleDark={() => setIsDark((prev) => !prev)}
+        />
+
+        {/* Canvas container with comfortable pb-16 bottom padding */}
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-16 max-w-[1580px] w-full mx-auto">
           
-          {/* Inline Modern Header */}
-          <Header
-            onSelectPreset={handleSelectPreset}
-            onResetBaseline={handleResetBaseline}
-            isCalculating={isCalculating}
-            currentPresetId={currentPresetId}
-            onPrint={handlePrint}
-          />
-
-          {/* ASYMMETRIC WORKBENCH LAYOUT: 38% Left Input Panel, 62% Right Canvas */}
-          <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 items-start mt-2">
-            
-            {/* LEFT INPUT PANEL (38% Width, Utilitarian & Dense) */}
-            <div className="w-full lg:w-[38%] shrink-0">
-              <ClinicalInputForm
-                inputs={inputs}
-                onChange={handleInputChange}
-                onRunInference={() => executeInference(inputs)}
-                isCalculating={isCalculating}
-                liveInference={liveInference}
-                setLiveInference={setLiveInference}
-              />
-            </div>
-
-            {/* RIGHT DIAGNOSTIC & EXPLAINABILITY CANVAS (62% Width) */}
-            <div className="w-full lg:w-[62%] min-w-0 flex-1 space-y-5">
-              
-              {/* 1. Primary Consensus Lineage Hero Card */}
-              <HeroResultCard
+          {/* STATE-DRIVEN MULTI-VIEW RENDERING */}
+          {activeTab === 'dashboard' && (
+            <div>
+              {/* 3. Top Metric Cards (Clinova 4-Card Grid) */}
+              <TopMetricCards
                 prediction={predictionResult.topPrediction}
                 inputs={inputs}
-                isCalculating={isCalculating}
               />
 
-              {/* 2. Differential Diagnoses Horizontal Bar Chart */}
-              <DifferentialBarChart
-                differentialDiagnoses={predictionResult.differentialDiagnoses}
-                isCalculating={isCalculating}
-              />
+              {/* 4. Two-Column Diagnostic Workbench */}
+              <div className="flex flex-col lg:flex-row gap-6 items-start">
+                
+                {/* Left Panel: Clinical Inputs & Somatic Chips */}
+                <div className="w-full lg:w-[42%] shrink-0">
+                  <ClinicalInputForm
+                    inputs={inputs}
+                    onChange={handleInputChange}
+                    onRunInference={() => executeInference(inputs)}
+                    isCalculating={isCalculating}
+                    liveInference={liveInference}
+                    setLiveInference={setLiveInference}
+                  />
+                </div>
 
-              {/* 3. Built-in SHAP Feature Attribution Waterfall */}
-              <ExplainabilityCard
-                shapExplanations={predictionResult.shapExplanations}
-                topPredictionName={predictionResult.topPrediction?.name}
-                isCalculating={isCalculating}
-              />
+                {/* Right Panel: Differential Diagnosis & SHAP Attributions */}
+                <div className="w-full lg:w-[58%] min-w-0 flex-1 space-y-6">
+                  
+                  {/* Primary Consensus Prediction Card */}
+                  <HeroResultCard
+                    prediction={predictionResult.topPrediction}
+                    inputs={inputs}
+                    isCalculating={isCalculating}
+                  />
 
+                  {/* Recharts Horizontal Bar Chart with Clinova Color Scheme */}
+                  <DifferentialBarChart
+                    differentialDiagnoses={predictionResult.differentialDiagnoses}
+                    isCalculating={isCalculating}
+                  />
+
+                  {/* SHAP Feature Impact Timeline */}
+                  <ExplainabilityCard
+                    shapExplanations={predictionResult.shapExplanations}
+                    topPredictionName={predictionResult.topPrediction?.name}
+                    isCalculating={isCalculating}
+                  />
+
+                </div>
+
+              </div>
             </div>
+          )}
 
-          </div>
+          {activeTab === 'cohort' && (
+            <CaseCohortView
+              currentPresetId={currentPresetId}
+              onSelectPreset={handleSelectPreset}
+              onSwitchToDashboard={() => setActiveTab('dashboard')}
+            />
+          )}
+
+          {activeTab === 'protocol' && (
+            <PatientProtocolView />
+          )}
+
+          {activeTab === 'settings' && (
+            <SettingsView />
+          )}
 
         </div>
 
         {/* Institutional Micro-Footer */}
-        <footer className="mt-auto border-t border-slate-200/50 bg-white/70 py-3.5 px-6 lg:px-8 text-xs text-slate-400">
-          <div className="max-w-[1560px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div className="flex items-center space-x-2 text-[11px]">
-              <Stethoscope className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-semibold text-slate-700">MSK-IMPACT Clinical Genomics Workbench</span>
-              <span className="text-slate-300">•</span>
-              <span>Tumor of Origin Decision Support System</span>
+        <footer className="mt-auto border-t border-[var(--border)] bg-white/80 dark:bg-slate-900/80 py-4 px-6 lg:px-8 text-xs text-[var(--muted-foreground)]">
+          <div className="max-w-[1580px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div className="flex items-center space-x-2 text-xs">
+              <Stethoscope className="w-4 h-4 text-[#0f766e]" />
+              <span className="font-bold text-[var(--foreground)]">Clinova Hospital Diagnostic Platform</span>
+              <span className="text-[var(--border)]">•</span>
+              <span>Pan-Cancer Somatic Tumor of Origin NGS Panel</span>
             </div>
 
-            <div className="flex items-center space-x-3 font-mono text-[10px] text-slate-400">
-              <span>Cohort n=10,945</span>
+            <div className="flex items-center space-x-3 font-mono text-[11px] text-[var(--muted-foreground)]">
+              <span>MSK-IMPACT n=10,945</span>
               <span>AUC: 0.941</span>
-              <span>Ensemble v1.0.4</span>
+              <span>Clinova v3.1</span>
             </div>
           </div>
         </footer>

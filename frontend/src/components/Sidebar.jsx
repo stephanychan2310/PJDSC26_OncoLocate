@@ -1,9 +1,12 @@
 import { 
-  Activity, 
-  Layers, 
-  FlaskConical, 
+  LayoutDashboard, 
+  FolderGit2, 
+  FileSpreadsheet, 
   Database, 
-  Search 
+  Settings, 
+  UserRound,
+  ChevronRight,
+  Dna
 } from 'lucide-react';
 import { PRESET_CASES } from '../data/mockModel';
 
@@ -14,83 +17,80 @@ export default function Sidebar({
   activeTab = 'dashboard',
   setActiveTab 
 }) {
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'cohort', label: 'Case Cohort', icon: FolderGit2 },
+    { id: 'protocol', label: 'Patient Protocol', icon: FileSpreadsheet },
+    { id: 'specs', label: 'Specs', icon: Database, action: onOpenModelInfo },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
+
   return (
-    <aside className="w-60 shrink-0 bg-[#fbfcfd] border-r border-slate-200/70 flex flex-col h-screen sticky top-0 z-30 select-none">
+    <aside 
+      className="w-[260px] min-w-[260px] max-w-[260px] shrink-0 bg-[var(--sidebar)] border-r border-[var(--sidebar-border)] min-h-screen flex flex-col select-none"
+    >
       
-      {/* Brand Header */}
-      <div className="h-16 px-5 border-b border-slate-200/60 flex items-center justify-between">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-7 h-7 rounded-lg bg-teal-800 flex items-center justify-center text-white shadow-xs">
-            <Activity className="w-4 h-4 text-teal-200" />
-          </div>
-          <div>
-            <span className="font-semibold text-slate-900 tracking-tight text-xs block leading-none">
-              MSK-IMPACT
-            </span>
-            <span className="text-[10px] text-slate-400 font-mono tracking-normal block mt-1">
-              Tumor of Origin
-            </span>
-          </div>
+      {/* 1. Logo Header: h-16 (64px) with border-b border-[var(--sidebar-border)] px-4 flex items-center gap-3 */}
+      <div className="h-16 px-4 border-b border-[var(--sidebar-border)] flex items-center gap-3 shrink-0">
+        <div 
+          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 shadow-2xs border border-teal-200/50"
+          style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)' }}
+        >
+          <Dna className="w-5 h-5 text-white" />
         </div>
-
-        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-mono font-medium bg-teal-50 text-teal-800 border border-teal-200/60">
-          v1.0
-        </span>
-      </div>
-
-      {/* Search Input */}
-      <div className="px-3.5 pt-3.5 pb-2">
-        <div className="relative">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search patient or case..."
-            className="w-full bg-slate-100/70 hover:bg-slate-100 focus:bg-white text-slate-700 text-xs rounded-lg pl-8 pr-2.5 py-1.5 border border-transparent focus:border-slate-200 focus:outline-none transition-all placeholder:text-slate-400"
-          />
-        </div>
-      </div>
-
-      {/* Main Navigation Tabs */}
-      <div className="px-2.5 py-2 space-y-0.5">
-        <button
-          type="button"
-          onClick={() => setActiveTab?.('dashboard')}
-          className={`w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
-            activeTab === 'dashboard'
-              ? 'bg-slate-200/70 text-slate-900 font-semibold'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-          }`}
-        >
-          <Layers className="w-4 h-4 text-teal-700" />
-          <span>Inference Canvas</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onOpenModelInfo()}
-          className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-colors"
-        >
-          <Database className="w-4 h-4 text-slate-400" />
-          <span>Cohort & Specs</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {}}
-          className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-colors"
-        >
-          <FlaskConical className="w-4 h-4 text-slate-400" />
-          <span>Clinical Protocols</span>
-        </button>
-      </div>
-
-      {/* Case Queue Section */}
-      <div className="px-3.5 pt-4 pb-2 flex-1 overflow-y-auto">
-        <div className="flex items-center justify-between mb-2 px-1.5">
-          <span className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">
-            Benchmark Cohort
+        <div className="min-w-0 flex-1">
+          <span className="text-sm font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap block truncate">
+            Pan-Cancer Project
           </span>
-          <span className="text-[10px] font-mono text-slate-400">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 block truncate">
+            Tumor Origin Classifier
+          </span>
+        </div>
+      </div>
+
+      {/* 2. Main Navigation Links */}
+      <div className="px-3 py-4 space-y-1">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => {
+                if (item.action) {
+                  item.action();
+                } else if (setActiveTab) {
+                  setActiveTab(item.id);
+                }
+              }}
+              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 cursor-pointer ${
+                isActive
+                  ? 'bg-[var(--sidebar-accent)] text-[var(--sidebar-accent-foreground)] font-semibold border border-teal-200/60 dark:border-teal-700/60 shadow-2xs'
+                  : 'text-[var(--sidebar-foreground)] hover:bg-slate-200/50 dark:hover:bg-slate-800/50 font-medium'
+              }`}
+            >
+              <Icon className="w-4 h-4 shrink-0" />
+              <span className="flex-1 text-left truncate">{item.label}</span>
+              {isActive && (
+                <span 
+                  className="w-1.5 h-1.5 rounded-full shadow-xs" 
+                  style={{ backgroundColor: 'var(--primary)' }}
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 3. Case Cohort Quick Queue */}
+      <div className="px-3 flex-1 overflow-y-auto pt-2">
+        <div className="flex items-center justify-between mb-2 px-2">
+          <span className="text-[10px] font-semibold tracking-wider text-[var(--muted-foreground)] uppercase">
+            Active Cohort
+          </span>
+          <span className="text-[10px] font-mono text-[var(--sidebar-accent-foreground)] bg-[var(--sidebar-accent)] px-1.5 py-0.2 rounded-md font-medium border border-teal-200/60 dark:border-teal-700/60">
             {PRESET_CASES.length} Cases
           </span>
         </div>
@@ -103,44 +103,46 @@ export default function Sidebar({
                 key={preset.id}
                 type="button"
                 onClick={() => onSelectPreset(preset.id)}
-                className={`w-full text-left p-2 rounded-lg transition-all text-xs border ${
+                className={`w-full text-left p-2.5 rounded-lg transition-all text-xs border cursor-pointer ${
                   isActive
-                    ? 'bg-white border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.03)]'
-                    : 'border-transparent hover:bg-slate-100/60 text-slate-600 hover:text-slate-900'
+                    ? 'bg-[var(--card)] border-teal-200/80 dark:border-teal-700/80 text-[var(--sidebar-accent-foreground)] font-semibold shadow-2xs'
+                    : 'border-transparent text-[var(--sidebar-foreground)] hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`font-medium truncate ${isActive ? 'text-slate-900 font-semibold' : 'text-slate-700'}`}>
-                    {preset.label.replace('Case ', 'C-')}
+                  <span className="truncate">
+                    {preset.label.replace('Case ', '')}
                   </span>
                   {isActive && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-teal-600 shrink-0 shadow-xs" />
+                    <ChevronRight className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--primary)' }} />
                   )}
                 </div>
-                <p className="text-[10px] text-slate-400 truncate mt-0.5 leading-tight font-mono">
+                <div className="text-[10px] truncate mt-0.5 font-mono text-[var(--muted-foreground)]">
                   {preset.data.fga.toFixed(2)} FGA • {preset.data.mutationCount} muts
-                </p>
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Sidebar Footer telemetry */}
-      <div className="p-3.5 border-t border-slate-200/60 bg-white/60">
-        <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/50">
-          <div className="flex items-center space-x-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-600" />
+      {/* 4. User Profile Badge Pinned at Bottom */}
+      <div className="p-3 border-t border-[var(--sidebar-border)] bg-white/40 dark:bg-slate-900/40">
+        <div className="flex items-center space-x-2.5 bg-[var(--card)] p-2 rounded-lg border border-[var(--sidebar-border)] shadow-2xs">
+          <div 
+            className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 border border-teal-200/60 dark:border-teal-700/60"
+            style={{ backgroundColor: 'var(--sidebar-accent)', color: 'var(--sidebar-accent-foreground)' }}
+          >
+            <UserRound className="w-4 h-4" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <span className="font-semibold text-slate-800 dark:text-slate-100 text-xs block leading-tight truncate">
+              Dr. Specialist
             </span>
-            <span className="text-[11px] font-medium text-slate-700">
-              Ensemble Classifier
+            <span className="text-[10px] text-[var(--muted-foreground)] block truncate mt-0.5">
+              Clinova Oncology Lab
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 mt-1 font-mono">
-            AUC: 0.941 • 58 Entities
-          </p>
         </div>
       </div>
 
