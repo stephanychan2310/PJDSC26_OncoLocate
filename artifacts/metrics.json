@@ -1,0 +1,108 @@
+{
+  "best_model": "XGBoost",
+  "weighting": "balanced",
+  "parameters": {
+    "max_depth": 4
+  },
+  "best_cv_macro_f1": 0.23281331706169647,
+  "xgb_first_fit_seconds": 16.69686520000687,
+  "xgb_depths": [
+    4,
+    6
+  ],
+  "xgb_rounds": 400,
+  "test_macro_f1_present_classes": 0.23011744377283574,
+  "test_macro_f1_classes_n_ge_20": 0.36435261930699,
+  "test_top3_accuracy": 0.7055326931870142,
+  "test_probability_max_row_sum_error": 8.539473128621466e-08,
+  "test_log_loss_before": 1.7998886607537563,
+  "unseen_class_test_rows": [
+    {
+      "sample_id": "P-0005313-T02-IM5",
+      "true_label": "Adrenocortical Adenoma"
+    }
+  ],
+  "cohort_sample_counts": {
+    "eligible_clinical": 10939,
+    "model_samples_after_genomic_join": 10939,
+    "clinical_samples_without_genomic_match": 0,
+    "eligible_clinical_patients": 10332,
+    "model_patients": 10332
+  },
+  "supported_class_count": 57,
+  "unsupported_training_classes": [
+    "Adrenocortical Adenoma"
+  ],
+  "heldout_model_comparison": [
+    {
+      "model": "LogisticRegression",
+      "weighting": "capped_5",
+      "cv_macro_f1": 0.22016360503387525,
+      "test_macro_f1_present_classes": 0.18849548292136645,
+      "test_macro_f1_classes_n_ge_20": 0.2984511812921635,
+      "test_top3_accuracy": 0.6556927297668038
+    },
+    {
+      "model": "RandomForest",
+      "weighting": "capped_5",
+      "cv_macro_f1": 0.21381604934503406,
+      "test_macro_f1_present_classes": 0.20092620077628914,
+      "test_macro_f1_classes_n_ge_20": 0.3181331512291244,
+      "test_top3_accuracy": 0.6534064929126657
+    },
+    {
+      "model": "XGBoost",
+      "weighting": "balanced",
+      "cv_macro_f1": 0.23281331706169647,
+      "test_macro_f1_present_classes": 0.23011744377283574,
+      "test_macro_f1_classes_n_ge_20": 0.36435261930699,
+      "test_top3_accuracy": 0.7055326931870142
+    }
+  ],
+  "prior_dummy_macro_f1": 0.004648670466328456,
+  "prior_dummy_top3_accuracy": 0.36671239140374945,
+  "temperature": 1.0927834858793783,
+  "test_log_loss_after": 1.7995292800068285,
+  "low_confidence_margin_cutoff_q25": 0.079801140384013,
+  "confidence_tiers": {
+    "1": {
+      "min": 0.07497047293785784,
+      "max": 0.30335094507231547,
+      "accuracy": 0.1998628728145355
+    },
+    "2": {
+      "min": 0.30336826631834446,
+      "max": 0.623289608990815,
+      "accuracy": 0.4463489886870072
+    },
+    "3": {
+      "min": 0.6234631842898142,
+      "max": 0.9982719181960327,
+      "accuracy": 0.8519026396983201
+    }
+  },
+  "smallest_feature_set_within_0_02": "clinical+top100",
+  "deployed_temperature": 1.0927834858793783,
+  "deployed_oof_margin_cutoff_q25": 0.079801140384013,
+  "deployed_confidence_tiers": {
+    "1": {
+      "min": 0.07497047293785784,
+      "max": 0.30335094507231547,
+      "accuracy": 0.1998628728145355
+    },
+    "2": {
+      "min": 0.30336826631834446,
+      "max": 0.623289608990815,
+      "accuracy": 0.4463489886870072
+    },
+    "3": {
+      "min": 0.6234631842898142,
+      "max": 0.9982719181960327,
+      "accuracy": 0.8519026396983201
+    }
+  },
+  "deployed_xgb_rounds": 228,
+  "deployed_tree_model": "XGBoost",
+  "api_predict_latency_seconds": 0.102611500013154,
+  "api_latency_target_under_1s_met": true
+}
