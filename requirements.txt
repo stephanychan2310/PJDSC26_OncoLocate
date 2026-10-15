@@ -1,0 +1,10 @@
+# Python 3.14, Windows x64. Do not try compiling scientific packages locally.
+--only-binary=:all:
+numpy==2.5.4
+pandas==3.0.6
+scipy==1.18.1
+scikit-learn==1.9.1
+xgboost==3.4.1
+shap==0.53.0
+joblib==1.5.3
+Flask==3.1.2
