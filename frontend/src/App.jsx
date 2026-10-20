@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import TopMetricCards from './components/TopMetricCards';
@@ -14,6 +14,7 @@ import {
   predictTumorOfOrigin, 
   PRESET_CASES 
 } from './data/mockModel';
+import { predictCase, getProfiles } from './api/apiClient';
 import { Stethoscope } from 'lucide-react';
 
 const INITIAL_STATE = {
@@ -45,10 +46,20 @@ export default function App() {
   const [inputs, setInputs] = useState(INITIAL_STATE);
   const [currentPresetId, setCurrentPresetId] = useState('case_luad');
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isLiveModel, setIsLiveModel] = useState(false);
   const [liveInference, setLiveInference] = useState(true);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'cohort' | 'protocol' | 'settings'
   const [isDark, setIsDark] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const currentPresetIdRef = useRef(currentPresetId);
+  const inferenceTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    currentPresetIdRef.current = currentPresetId;
+  }, [currentPresetId]);
 
   useEffect(() => {
     if (isDark) {
@@ -63,24 +74,67 @@ export default function App() {
     predictTumorOfOrigin(INITIAL_STATE)
   );
 
-  // Trigger inference calculation
-  const executeInference = useCallback((currentInputs) => {
-    setIsCalculating(true);
-    const timer = setTimeout(() => {
-      const result = predictTumorOfOrigin(currentInputs);
-      setPredictionResult(result);
-      setIsCalculating(false);
-    }, 120);
+  // Trigger inference calculation (supports live Flask backend with automatic mock fallback)
+  const executeInference = useCallback((currentInputs, profileId, immediate = false) => {
+    const targetProfileId = profileId || currentPresetIdRef.current || 'case_luad';
+    
+    if (inferenceTimeoutRef.current) {
+      clearTimeout(inferenceTimeoutRef.current);
+    }
 
-    return () => clearTimeout(timer);
+    const run = async () => {
+      setIsCalculating(true);
+      try {
+        const result = await predictCase(targetProfileId, currentInputs);
+        setPredictionResult(result);
+        setIsLiveModel(Boolean(result.isLive));
+      } catch (err) {
+        console.error('Inference execution error:', err);
+      } finally {
+        setIsCalculating(false);
+      }
+    };
+
+    if (immediate) {
+      run();
+    } else {
+      inferenceTimeoutRef.current = setTimeout(run, 140);
+    }
   }, []);
+
+  // Clean up inference timer on unmount
+  useEffect(() => {
+    return () => {
+      if (inferenceTimeoutRef.current) {
+        clearTimeout(inferenceTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Probe live Flask model on initial mount
+  useEffect(() => {
+    let isMounted = true;
+    getProfiles()
+      .then((profiles) => {
+        if (isMounted && profiles && profiles.length > 0) {
+          executeInference(INITIAL_STATE, 'case_luad', true);
+        }
+      })
+      .catch(() => {
+        // Fallback already handled
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [executeInference]);
 
   // Handle inputs modification
   const handleInputChange = (newInputs) => {
     setInputs(newInputs);
     setCurrentPresetId(''); // custom configuration
     if (liveInference) {
-      executeInference(newInputs);
+      executeInference(newInputs, currentPresetId || 'case_luad');
     }
   };
 
@@ -90,7 +144,7 @@ export default function App() {
     if (found) {
       setInputs(found.data);
       setCurrentPresetId(presetId);
-      executeInference(found.data);
+      executeInference(found.data, presetId, true);
     }
   };
 
@@ -98,7 +152,7 @@ export default function App() {
   const handleResetBaseline = () => {
     setInputs(INITIAL_STATE);
     setCurrentPresetId('case_luad');
-    executeInference(INITIAL_STATE);
+    executeInference(INITIAL_STATE, 'case_luad', true);
   };
 
   const handlePrint = () => {
@@ -108,27 +162,62 @@ export default function App() {
   return (
     <div className="flex min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       
-      {/* 1. Clinova Fixed Navigation Spine (260px) */}
+      {/* 1. OncoLocate Collapsible Desktop Sidebar */}
       <Sidebar
         currentPresetId={currentPresetId}
         onSelectPreset={handleSelectPreset}
         onOpenModelInfo={() => setIsSpecsOpen(true)}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
       />
 
+      {/* Mobile Navigation Drawer Backdrop & Slider */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="relative w-[280px] max-w-[85vw] bg-[var(--sidebar)] border-r border-[var(--sidebar-border)] h-full flex flex-col z-10 shadow-2xl">
+            <Sidebar
+              currentPresetId={currentPresetId}
+              onSelectPreset={(id) => {
+                handleSelectPreset(id);
+                setMobileMenuOpen(false);
+              }}
+              onOpenModelInfo={() => {
+                setIsSpecsOpen(true);
+                setMobileMenuOpen(false);
+              }}
+              activeTab={activeTab}
+              setActiveTab={(tab) => {
+                setActiveTab(tab);
+                setMobileMenuOpen(false);
+              }}
+              collapsed={false}
+              isMobile={true}
+              onCloseMobile={() => setMobileMenuOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+
       {/* 2. Main content shell */}
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col transition-all duration-300 ease-in-out">
         
         {/* Top Bar Header */}
         <Header
           onSelectPreset={handleSelectPreset}
           onResetBaseline={handleResetBaseline}
           isCalculating={isCalculating}
+          isLiveModel={isLiveModel}
           currentPresetId={currentPresetId}
           onPrint={handlePrint}
           isDark={isDark}
           onToggleDark={() => setIsDark((prev) => !prev)}
+          onOpenMobileMenu={() => setMobileMenuOpen(true)}
         />
 
         {/* Canvas container with comfortable pb-16 bottom padding */}
@@ -137,21 +226,21 @@ export default function App() {
           {/* STATE-DRIVEN MULTI-VIEW RENDERING */}
           {activeTab === 'dashboard' && (
             <div>
-              {/* 3. Top Metric Cards (Clinova 4-Card Grid) */}
+              {/* 3. Top Metric Cards (OncoLocate 4-Card Grid) */}
               <TopMetricCards
                 prediction={predictionResult.topPrediction}
                 inputs={inputs}
               />
 
-              {/* 4. Two-Column Diagnostic Workbench */}
-              <div className="flex flex-col lg:flex-row gap-6 items-start">
+              {/* 4. Diagnostic Workbench (Responsive 12-Column Grid) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
                 {/* Left Panel: Clinical Inputs & Somatic Chips */}
-                <div className="w-full lg:w-[42%] shrink-0">
+                <div className="w-full lg:col-span-5 shrink-0">
                   <ClinicalInputForm
                     inputs={inputs}
                     onChange={handleInputChange}
-                    onRunInference={() => executeInference(inputs)}
+                    onRunInference={() => executeInference(inputs, currentPresetId, true)}
                     isCalculating={isCalculating}
                     liveInference={liveInference}
                     setLiveInference={setLiveInference}
@@ -159,7 +248,7 @@ export default function App() {
                 </div>
 
                 {/* Right Panel: Differential Diagnosis & SHAP Attributions */}
-                <div className="w-full lg:w-[58%] min-w-0 flex-1 space-y-6">
+                <div className="w-full lg:col-span-7 min-w-0 space-y-6">
                   
                   {/* Primary Consensus Prediction Card */}
                   <HeroResultCard
@@ -168,7 +257,7 @@ export default function App() {
                     isCalculating={isCalculating}
                   />
 
-                  {/* Recharts Horizontal Bar Chart with Clinova Color Scheme */}
+                  {/* Recharts Horizontal Bar Chart */}
                   <DifferentialBarChart
                     differentialDiagnoses={predictionResult.differentialDiagnoses}
                     isCalculating={isCalculating}
@@ -210,7 +299,7 @@ export default function App() {
           <div className="max-w-[1580px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="flex items-center space-x-2 text-xs">
               <Stethoscope className="w-4 h-4 text-[#0f766e]" />
-              <span className="font-bold text-[var(--foreground)]">Clinova Hospital Diagnostic Platform</span>
+              <span className="font-bold text-[var(--foreground)]">OncoLocate Diagnostic Platform</span>
               <span className="text-[var(--border)]">•</span>
               <span>Pan-Cancer Somatic Tumor of Origin NGS Panel</span>
             </div>
@@ -218,7 +307,7 @@ export default function App() {
             <div className="flex items-center space-x-3 font-mono text-[11px] text-[var(--muted-foreground)]">
               <span>MSK-IMPACT n=10,945</span>
               <span>AUC: 0.941</span>
-              <span>Clinova v3.1</span>
+              <span>OncoLocate v3.1</span>
             </div>
           </div>
         </footer>

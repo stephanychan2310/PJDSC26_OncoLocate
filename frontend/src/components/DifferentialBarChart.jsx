@@ -7,11 +7,42 @@ import {
   Tooltip as RechartsTooltip, 
   ResponsiveContainer, 
   Cell,
-  ReferenceLine 
+  ReferenceLine,
+  LabelList 
 } from 'recharts';
 import { BarChart3, Table } from 'lucide-react';
 import Tooltip from './Tooltip';
 import { CANCER_CODE_MAPPING } from '../data/mockModel';
+
+function YAxisCustomTick({ x, y, payload }) {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={-8}
+        y={4}
+        textAnchor="end"
+        className="fill-slate-700 dark:fill-slate-300 text-[11px] font-semibold"
+      >
+        {payload.value}
+      </text>
+    </g>
+  );
+}
+
+function XAxisCustomTick({ x, y, payload }) {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={14}
+        textAnchor="middle"
+        className="fill-slate-500 dark:fill-slate-400 text-[11px] font-mono"
+      >
+        {`${payload.value}%`}
+      </text>
+    </g>
+  );
+}
 
 function CustomChartTooltip({ active, payload }) {
   if (active && payload && payload.length) {
@@ -60,7 +91,7 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
     code: CANCER_CODE_MAPPING[item.name]?.code || 'UNK',
   }));
 
-  // Clinova Bed Occupancy dynamic color scheme
+  // Actionability-tiered dynamic color scheme
   const getBarColor = (index) => {
     if (index === 0) return '#dc2626'; // Rank 1: Crimson / Coral Red
     if (index === 1 || index === 2) return '#d97706'; // Rank 2 & 3: Warm Amber / Gold
@@ -79,7 +110,7 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
             <Tooltip text="Posterior probability distribution across top candidate cancer lineages, calibrated via Platt scaling." />
           </h3>
           <p className="text-xs text-[var(--muted-foreground)]">
-            Differential likelihood across reference cohorts (Clinova Color Mapping)
+            Differential likelihood across reference cohorts (Actionability-Tiered Differential Likelihood)
           </p>
         </div>
 
@@ -120,22 +151,21 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
                 <BarChart
                   data={chartData}
                   layout="vertical"
-                  margin={{ top: 8, right: 35, left: 10, bottom: 8 }}
+                  margin={{ top: 8, right: 65, left: 10, bottom: 8 }}
                 >
                   <XAxis
                     type="number"
-                    domain={[0, 100]}
-                    tick={{ fill: '#94a3b8', fontSize: 11, fontFamily: 'monospace' }}
-                    tickFormatter={(val) => `${val}%`}
-                    axisLine={{ stroke: '#e2e8f0' }}
-                    tickLine={{ stroke: '#e2e8f0' }}
+                    domain={[0, (dataMax) => Math.max(100, Math.ceil(dataMax + 14))]}
+                    tick={<XAxisCustomTick />}
+                    axisLine={{ stroke: 'var(--border)' }}
+                    tickLine={{ stroke: 'var(--border)' }}
                   />
                   <YAxis
                     type="category"
                     dataKey="name"
                     width={155}
-                    tick={{ fill: '#334155', fontSize: 11, fontWeight: 600 }}
-                    axisLine={{ stroke: '#e2e8f0' }}
+                    tick={<YAxisCustomTick />}
+                    axisLine={{ stroke: 'var(--border)' }}
                     tickLine={false}
                   />
                   <RechartsTooltip content={<CustomChartTooltip />} cursor={{ fill: 'var(--muted)', opacity: 0.6 }} />
@@ -154,12 +184,19 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
                     }}
                   />
                   
-                  {/* Dynamic Clinova Bars */}
+                  {/* Actionability-Tiered Bars with Inline Value Labels */}
                   <Bar
                     dataKey="probability"
                     radius={[0, 6, 6, 0]}
                     barSize={20}
                   >
+                    <LabelList
+                      dataKey="probability"
+                      position="right"
+                      formatter={(v) => `${(Number(v) > 1 ? Number(v) : Number(v) * 100).toFixed(1)}%`}
+                      className="fill-slate-700 dark:fill-slate-200 text-xs font-semibold font-mono"
+                      offset={8}
+                    />
                     {chartData.map((entry, index) => (
                       <Cell
                         key={`cell-${entry.name}`}
@@ -171,7 +208,7 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
               </ResponsiveContainer>
             </div>
 
-            {/* Metric Summary Cards Grid with Matching Clinova Palette */}
+            {/* Metric Summary Cards Grid with Matching Palette */}
             <div className="mt-4 pt-3 border-t border-[var(--border)] grid grid-cols-2 sm:grid-cols-5 gap-2.5">
               {differentialDiagnoses.map((diag, idx) => {
                 const isRank1 = idx === 0;
@@ -194,7 +231,7 @@ export default function DifferentialBarChart({ differentialDiagnoses, isCalculat
                       </span>
                       <span>{CANCER_CODE_MAPPING[diag.name]?.code || 'CANC'}</span>
                     </div>
-                    <div className="text-xs font-semibold text-[var(--foreground)] truncate mt-1" title={diag.name}>
+                    <div className="text-xs sm:text-sm font-semibold text-[var(--foreground)] break-words whitespace-normal leading-snug mt-1" title={diag.name}>
                       {diag.name}
                     </div>
                     <div className={`text-sm font-mono font-bold tracking-tight mt-0.5 ${
