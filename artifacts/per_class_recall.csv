@@ -1,0 +1,58 @@
+class_id,cancer_type,recall,test_support
+1,Adrenocortical Carcinoma,0.0,5
+2,Ampullary Cancer,0.0,4
+3,Ampullary Carcinoma,0.0,2
+4,Anal Cancer,0.14285714285714285,7
+5,Appendiceal Cancer,0.26666666666666666,15
+6,Bladder Cancer,0.6190476190476191,84
+7,Bone Cancer,0.2222222222222222,27
+8,Breast Cancer,0.6591760299625468,267
+9,CNS Cancer,0.2,10
+10,Cancer of Unknown Primary,0.08108108108108109,37
+11,Cervical Cancer,0.1,10
+12,Colorectal Cancer,0.746268656716418,201
+13,Embryonal Tumor,0.0,2
+14,Endometrial Cancer,0.6136363636363636,44
+15,Esophagogastric Cancer,0.38235294117647056,68
+16,Gastrointestinal Neuroendocrine Tumor,0.1111111111111111,9
+17,Gastrointestinal Stromal Tumor,0.75,28
+18,Germ Cell Tumor,0.47368421052631576,57
+19,Gestational Trophoblastic Disease,0.0,1
+20,Glioma,0.8288288288288288,111
+21,Head and Neck Cancer,0.2972972972972973,37
+22,Hepatobiliary Cancer,0.2535211267605634,71
+23,Histiocytosis,0.0,4
+24,Hodgkin Lymphoma,0.0,1
+25,Leukemia,0.0,0
+26,Mastocytosis,0.0,0
+27,Mature B-Cell Neoplasms,0.5185185185185185,27
+28,Mature T and NK Neoplasms,0.5,6
+29,Melanoma,0.6027397260273972,73
+30,Mesothelioma,0.3181818181818182,22
+31,Miscellaneous Brain Tumor,0.0,1
+32,Miscellaneous Neuroepithelial Tumor,0.0,2
+33,Nerve Sheath Tumor,0.0,3
+34,Non-Hodgkin Lymphoma,0.0,1
+35,Non-Small Cell Lung Cancer,0.5688622754491018,334
+36,Ovarian Cancer,0.5333333333333333,45
+37,Pancreatic Cancer,0.58,100
+38,Penile Cancer,0.0,1
+39,Peripheral Nervous System,0.5625,16
+40,Pheochromocytoma,0.0,1
+41,Pineal Tumor,0.0,0
+42,Prostate Cancer,0.46853146853146854,143
+43,Renal Cell Carcinoma,0.4722222222222222,72
+44,Retinoblastoma,0.0,0
+45,Salivary Gland Cancer,0.21739130434782608,23
+46,Sellar Tumor,0.0,1
+47,Sex Cord Stromal Tumor,0.0,4
+48,"Skin Cancer, Non-Melanoma",0.3103448275862069,29
+49,Small Bowel Cancer,0.0,7
+50,Small Cell Lung Cancer,0.625,16
+51,Soft Tissue Sarcoma,0.22727272727272727,88
+52,T-Lymphoblastic Leukemia/Lymphoma,0.0,0
+53,Thymic Tumor,0.0,4
+54,Thyroid Cancer,0.574468085106383,47
+55,Uterine Sarcoma,0.4444444444444444,18
+56,Vaginal Cancer,0.0,1
+57,Wilms Tumor,0.0,0

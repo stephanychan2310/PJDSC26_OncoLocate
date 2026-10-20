@@ -1,0 +1,172 @@
+model,class_id,cancer_type,recall,test_support
+LogisticRegression,1,Adrenocortical Carcinoma,0.0,5
+LogisticRegression,2,Ampullary Cancer,0.0,4
+LogisticRegression,3,Ampullary Carcinoma,0.0,2
+LogisticRegression,4,Anal Cancer,0.14285714285714285,7
+LogisticRegression,5,Appendiceal Cancer,0.26666666666666666,15
+LogisticRegression,6,Bladder Cancer,0.5595238095238095,84
+LogisticRegression,7,Bone Cancer,0.07407407407407407,27
+LogisticRegression,8,Breast Cancer,0.5767790262172284,267
+LogisticRegression,9,CNS Cancer,0.1,10
+LogisticRegression,10,Cancer of Unknown Primary,0.02702702702702703,37
+LogisticRegression,11,Cervical Cancer,0.1,10
+LogisticRegression,12,Colorectal Cancer,0.681592039800995,201
+LogisticRegression,13,Embryonal Tumor,0.0,2
+LogisticRegression,14,Endometrial Cancer,0.4772727272727273,44
+LogisticRegression,15,Esophagogastric Cancer,0.3382352941176471,68
+LogisticRegression,16,Gastrointestinal Neuroendocrine Tumor,0.3333333333333333,9
+LogisticRegression,17,Gastrointestinal Stromal Tumor,0.75,28
+LogisticRegression,18,Germ Cell Tumor,0.38596491228070173,57
+LogisticRegression,19,Gestational Trophoblastic Disease,0.0,1
+LogisticRegression,20,Glioma,0.6846846846846847,111
+LogisticRegression,21,Head and Neck Cancer,0.1891891891891892,37
+LogisticRegression,22,Hepatobiliary Cancer,0.16901408450704225,71
+LogisticRegression,23,Histiocytosis,0.25,4
+LogisticRegression,24,Hodgkin Lymphoma,0.0,1
+LogisticRegression,25,Leukemia,0.0,0
+LogisticRegression,26,Mastocytosis,0.0,0
+LogisticRegression,27,Mature B-Cell Neoplasms,0.4074074074074074,27
+LogisticRegression,28,Mature T and NK Neoplasms,0.5,6
+LogisticRegression,29,Melanoma,0.410958904109589,73
+LogisticRegression,30,Mesothelioma,0.36363636363636365,22
+LogisticRegression,31,Miscellaneous Brain Tumor,0.0,1
+LogisticRegression,32,Miscellaneous Neuroepithelial Tumor,0.0,2
+LogisticRegression,33,Nerve Sheath Tumor,0.0,3
+LogisticRegression,34,Non-Hodgkin Lymphoma,0.0,1
+LogisticRegression,35,Non-Small Cell Lung Cancer,0.4431137724550898,334
+LogisticRegression,36,Ovarian Cancer,0.26666666666666666,45
+LogisticRegression,37,Pancreatic Cancer,0.42,100
+LogisticRegression,38,Penile Cancer,0.0,1
+LogisticRegression,39,Peripheral Nervous System,0.5,16
+LogisticRegression,40,Pheochromocytoma,0.0,1
+LogisticRegression,41,Pineal Tumor,0.0,0
+LogisticRegression,42,Prostate Cancer,0.4755244755244755,143
+LogisticRegression,43,Renal Cell Carcinoma,0.3888888888888889,72
+LogisticRegression,44,Retinoblastoma,0.0,0
+LogisticRegression,45,Salivary Gland Cancer,0.043478260869565216,23
+LogisticRegression,46,Sellar Tumor,0.0,1
+LogisticRegression,47,Sex Cord Stromal Tumor,0.0,4
+LogisticRegression,48,"Skin Cancer, Non-Melanoma",0.13793103448275862,29
+LogisticRegression,49,Small Bowel Cancer,0.14285714285714285,7
+LogisticRegression,50,Small Cell Lung Cancer,0.375,16
+LogisticRegression,51,Soft Tissue Sarcoma,0.125,88
+LogisticRegression,52,T-Lymphoblastic Leukemia/Lymphoma,0.0,0
+LogisticRegression,53,Thymic Tumor,0.0,4
+LogisticRegression,54,Thyroid Cancer,0.5319148936170213,47
+LogisticRegression,55,Uterine Sarcoma,0.16666666666666666,18
+LogisticRegression,56,Vaginal Cancer,0.0,1
+LogisticRegression,57,Wilms Tumor,0.0,0
+RandomForest,1,Adrenocortical Carcinoma,0.0,5
+RandomForest,2,Ampullary Cancer,0.0,4
+RandomForest,3,Ampullary Carcinoma,0.0,2
+RandomForest,4,Anal Cancer,0.14285714285714285,7
+RandomForest,5,Appendiceal Cancer,0.26666666666666666,15
+RandomForest,6,Bladder Cancer,0.6428571428571429,84
+RandomForest,7,Bone Cancer,0.037037037037037035,27
+RandomForest,8,Breast Cancer,0.5655430711610487,267
+RandomForest,9,CNS Cancer,0.5,10
+RandomForest,10,Cancer of Unknown Primary,0.05405405405405406,37
+RandomForest,11,Cervical Cancer,0.1,10
+RandomForest,12,Colorectal Cancer,0.7412935323383084,201
+RandomForest,13,Embryonal Tumor,0.0,2
+RandomForest,14,Endometrial Cancer,0.5909090909090909,44
+RandomForest,15,Esophagogastric Cancer,0.36764705882352944,68
+RandomForest,16,Gastrointestinal Neuroendocrine Tumor,0.1111111111111111,9
+RandomForest,17,Gastrointestinal Stromal Tumor,0.8214285714285714,28
+RandomForest,18,Germ Cell Tumor,0.45614035087719296,57
+RandomForest,19,Gestational Trophoblastic Disease,0.0,1
+RandomForest,20,Glioma,0.8468468468468469,111
+RandomForest,21,Head and Neck Cancer,0.21621621621621623,37
+RandomForest,22,Hepatobiliary Cancer,0.07042253521126761,71
+RandomForest,23,Histiocytosis,0.5,4
+RandomForest,24,Hodgkin Lymphoma,0.0,1
+RandomForest,25,Leukemia,0.0,0
+RandomForest,26,Mastocytosis,0.0,0
+RandomForest,27,Mature B-Cell Neoplasms,0.6296296296296297,27
+RandomForest,28,Mature T and NK Neoplasms,0.5,6
+RandomForest,29,Melanoma,0.4794520547945205,73
+RandomForest,30,Mesothelioma,0.36363636363636365,22
+RandomForest,31,Miscellaneous Brain Tumor,0.0,1
+RandomForest,32,Miscellaneous Neuroepithelial Tumor,0.0,2
+RandomForest,33,Nerve Sheath Tumor,0.0,3
+RandomForest,34,Non-Hodgkin Lymphoma,0.0,1
+RandomForest,35,Non-Small Cell Lung Cancer,0.31137724550898205,334
+RandomForest,36,Ovarian Cancer,0.4444444444444444,45
+RandomForest,37,Pancreatic Cancer,0.5,100
+RandomForest,38,Penile Cancer,0.0,1
+RandomForest,39,Peripheral Nervous System,0.5,16
+RandomForest,40,Pheochromocytoma,0.0,1
+RandomForest,41,Pineal Tumor,0.0,0
+RandomForest,42,Prostate Cancer,0.3356643356643357,143
+RandomForest,43,Renal Cell Carcinoma,0.4027777777777778,72
+RandomForest,44,Retinoblastoma,0.0,0
+RandomForest,45,Salivary Gland Cancer,0.043478260869565216,23
+RandomForest,46,Sellar Tumor,0.0,1
+RandomForest,47,Sex Cord Stromal Tumor,0.0,4
+RandomForest,48,"Skin Cancer, Non-Melanoma",0.3103448275862069,29
+RandomForest,49,Small Bowel Cancer,0.0,7
+RandomForest,50,Small Cell Lung Cancer,0.875,16
+RandomForest,51,Soft Tissue Sarcoma,0.14772727272727273,88
+RandomForest,52,T-Lymphoblastic Leukemia/Lymphoma,0.0,0
+RandomForest,53,Thymic Tumor,0.0,4
+RandomForest,54,Thyroid Cancer,0.6808510638297872,47
+RandomForest,55,Uterine Sarcoma,0.5,18
+RandomForest,56,Vaginal Cancer,0.0,1
+RandomForest,57,Wilms Tumor,0.0,0
+XGBoost,1,Adrenocortical Carcinoma,0.0,5
+XGBoost,2,Ampullary Cancer,0.0,4
+XGBoost,3,Ampullary Carcinoma,0.0,2
+XGBoost,4,Anal Cancer,0.14285714285714285,7
+XGBoost,5,Appendiceal Cancer,0.26666666666666666,15
+XGBoost,6,Bladder Cancer,0.6190476190476191,84
+XGBoost,7,Bone Cancer,0.2222222222222222,27
+XGBoost,8,Breast Cancer,0.6591760299625468,267
+XGBoost,9,CNS Cancer,0.2,10
+XGBoost,10,Cancer of Unknown Primary,0.08108108108108109,37
+XGBoost,11,Cervical Cancer,0.1,10
+XGBoost,12,Colorectal Cancer,0.746268656716418,201
+XGBoost,13,Embryonal Tumor,0.0,2
+XGBoost,14,Endometrial Cancer,0.6136363636363636,44
+XGBoost,15,Esophagogastric Cancer,0.38235294117647056,68
+XGBoost,16,Gastrointestinal Neuroendocrine Tumor,0.1111111111111111,9
+XGBoost,17,Gastrointestinal Stromal Tumor,0.75,28
+XGBoost,18,Germ Cell Tumor,0.47368421052631576,57
+XGBoost,19,Gestational Trophoblastic Disease,0.0,1
+XGBoost,20,Glioma,0.8288288288288288,111
+XGBoost,21,Head and Neck Cancer,0.2972972972972973,37
+XGBoost,22,Hepatobiliary Cancer,0.2535211267605634,71
+XGBoost,23,Histiocytosis,0.0,4
+XGBoost,24,Hodgkin Lymphoma,0.0,1
+XGBoost,25,Leukemia,0.0,0
+XGBoost,26,Mastocytosis,0.0,0
+XGBoost,27,Mature B-Cell Neoplasms,0.5185185185185185,27
+XGBoost,28,Mature T and NK Neoplasms,0.5,6
+XGBoost,29,Melanoma,0.6027397260273972,73
+XGBoost,30,Mesothelioma,0.3181818181818182,22
+XGBoost,31,Miscellaneous Brain Tumor,0.0,1
+XGBoost,32,Miscellaneous Neuroepithelial Tumor,0.0,2
+XGBoost,33,Nerve Sheath Tumor,0.0,3
+XGBoost,34,Non-Hodgkin Lymphoma,0.0,1
+XGBoost,35,Non-Small Cell Lung Cancer,0.5688622754491018,334
+XGBoost,36,Ovarian Cancer,0.5333333333333333,45
+XGBoost,37,Pancreatic Cancer,0.58,100
+XGBoost,38,Penile Cancer,0.0,1
+XGBoost,39,Peripheral Nervous System,0.5625,16
+XGBoost,40,Pheochromocytoma,0.0,1
+XGBoost,41,Pineal Tumor,0.0,0
+XGBoost,42,Prostate Cancer,0.46853146853146854,143
+XGBoost,43,Renal Cell Carcinoma,0.4722222222222222,72
+XGBoost,44,Retinoblastoma,0.0,0
+XGBoost,45,Salivary Gland Cancer,0.21739130434782608,23
+XGBoost,46,Sellar Tumor,0.0,1
+XGBoost,47,Sex Cord Stromal Tumor,0.0,4
+XGBoost,48,"Skin Cancer, Non-Melanoma",0.3103448275862069,29
+XGBoost,49,Small Bowel Cancer,0.0,7
+XGBoost,50,Small Cell Lung Cancer,0.625,16
+XGBoost,51,Soft Tissue Sarcoma,0.22727272727272727,88
+XGBoost,52,T-Lymphoblastic Leukemia/Lymphoma,0.0,0
+XGBoost,53,Thymic Tumor,0.0,4
+XGBoost,54,Thyroid Cancer,0.574468085106383,47
+XGBoost,55,Uterine Sarcoma,0.4444444444444444,18
+XGBoost,56,Vaginal Cancer,0.0,1
+XGBoost,57,Wilms Tumor,0.0,0
