@@ -52,7 +52,7 @@ export default function PatientProtocolView() {
       category: 'In Silico Informatics',
       icon: Stethoscope,
       items: [
-        'Execute Clinova Ensemble classifier to compute 58-class posterior probability distribution.',
+        'Execute OncoLocate Ensemble classifier to compute 58-class posterior probability distribution.',
         'Evaluate differential diagnosis probability cutoff: primary diagnosis should exceed 70% confidence threshold.',
         'Verify TreeSHAP feature attributions: ensure top pathognomonic drivers (e.g. APC mutation, EGFR activating mutation) correspond with candidate organ system.',
       ],

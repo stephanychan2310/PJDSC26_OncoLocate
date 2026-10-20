@@ -30,19 +30,19 @@ The frontend is built with **React 19**, **Vite**, **Tailwind CSS v4**, **Lucide
 |    * Settings          |    3. Patient Protocol: 4-Phase CUP Clinical SOP Checklist            |
 |  - Cohort Queue        |    4. Settings: Hyperparameters & Decision Threshold Sliders          |
 |  - Clinician Profile   |-----------------------------------------------------------------------|
-|                        |  [MICRO-FOOTER] Clinova Hospital Platform • MSK-IMPACT n=10,945 • AUC |
+|                        |  [MICRO-FOOTER] OncoLocate Diagnostic Platform • MSK-IMPACT n=10,945 • AUC|
 +------------------------------------------------------------------------------------------------+
 ```
 
 #### Persistent Layout Elements
-- **Sidebar (`Sidebar.jsx`)**: Fixed 260px spine (`w-[260px] min-w-[260px] max-w-[260px] shrink-0 bg-[var(--sidebar)] border-r border-[var(--sidebar-border)] min-h-screen`).
-  - **Brand Header (64px)**: Emblem with genomic DNA icon, Title *"Pan-Cancer Project"*, Subtitle *"Tumor Origin Classifier"*.
+- **Sidebar (`Sidebar.jsx`)**: Desktop collapsible spine (`w-[260px] min-w-[260px]` expanded; `w-[68px] min-w-[68px]` collapsed) with right-edge toggle button.
+  - **Brand Header (72px)**: Emblem with genomic DNA icon, Title *"OncoLocate"*, Subtitle *"Tumor Origin Decision Support"*.
   - **Navigation List**: Interactive links for *Dashboard*, *Case Cohort*, *Patient Protocol*, *Specs*, and *Settings*.
   - **Active Cohort Queue**: Quick-selection list displaying benchmark cases with FGA and mutation counts.
-  - **Pinned Profile Badge**: Clinician identifier (*"Dr. Specialist • Clinova Oncology Lab"*).
-- **Top Bar Header (`Header.jsx`)**: Sticky 64px header (`h-16 px-6 border-b border-[var(--border)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm z-30`).
-  - **Search Input**: Rounded rectangular container (`rounded-lg border border-[var(--border)] bg-[var(--background)]`) with `<kbd>⌘K</kbd>` command badge.
-  - **Status Indicator**: Animated pulse badge (*"System Online / Model Ready"*).
+  - **Pinned Profile Badge**: Clinician identifier (*"Dr. Specialist • OncoLocate Oncology Lab"*).
+- **Top Bar Header (`Header.jsx`)**: Sticky 72px header (`h-[72px] px-6 border-b border-[var(--border)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm z-30`).
+  - **Search Input**: Responsive 44px container (`h-11 max-w-xl rounded-xl border border-[var(--border)] bg-[var(--background)]`) with `<kbd>⌘K</kbd>` command badge.
+  - **Status Indicator**: Animated pulse badge (*"Live Model (Flask)"* / *"Demo Mode (Mock)"*).
   - **Benchmark Case Dropdown**: Instant case profile preset loader.
   - **Actions**: Export report (`window.print()`), Reset baseline values, and Dark Mode toggle button (`Sun` / `Moon`).
 - **Institutional Micro-Footer**: Clean metadata strip containing cohort size, model version, and ROC-AUC metrics.
@@ -66,7 +66,7 @@ State-based view routing is managed in `App.jsx` via the `activeTab` state (`'da
 | **`TopMetricCards`** | `src/components/TopMetricCards.jsx` | 4-card metric strip: Top Predicted Origin (break-words), Genomic Burden (CIN), Somatic Mutations, and Actionability. |
 | **`ClinicalInputForm`** | `src/components/ClinicalInputForm.jsx` | Dense 42% workbench input: Sex segmented toggle, Origin site toggle, FGA number/slider, TMB presets, Somatic gene search and chip selector, Live Auto-calc toggle, and Run Inference trigger. |
 | **`HeroResultCard`** | `src/components/HeroResultCard.jsx` | Top classification hero card: Disease title, OncoTree code, ICD-O-3 code, organ system, confidence badge, certainty tag, copy summary trigger. |
-| **`DifferentialBarChart`** | `src/components/DifferentialBarChart.jsx` | Horizontal bar chart (Recharts) mapping top 5 differential diagnoses with Clinova occupancy color scheme, 20% reference line, metric cards grid, and audit table toggle. |
+| **`DifferentialBarChart`** | `src/components/DifferentialBarChart.jsx` | Horizontal bar chart (Recharts) mapping top 5 differential diagnoses with Actionability-Tiered palette, inline percentage labels, 20% reference line, metric cards grid, and audit table toggle. |
 | **`ExplainabilityCard`** | `src/components/ExplainabilityCard.jsx` | SHAP feature impact view: Segmented filter pills (All/Positive/Negative), magnitude bars, feature interpretation, and baseline driver fallbacks. |
 | **`CaseCohortView`** | `src/components/CaseCohortView.jsx` | Standardized directory table for benchmark cases (LUAD, CRC, Melanoma, PDAC, UCEC) with direct activation buttons. |
 | **`PatientProtocolView`**| `src/components/PatientProtocolView.jsx` | Interactive 4-phase clinical SOP checklist for CUP diagnosis and molecular triage. |
@@ -78,7 +78,7 @@ State-based view routing is managed in `App.jsx` via the `activeTab` state (`'da
 
 ## 2. Design System & Design Tokens
 
-### 2.1 Clinova Institutional Palette (OKLCH)
+### 2.1 OncoLocate Clinical Palette (OKLCH)
 The design system is implemented in `frontend/src/index.css` using modern CSS variables defined in `:root` and `.dark`.
 
 ```css

@@ -731,3 +731,5 @@ export const CANCER_CODE_MAPPING = {
   'Glioblastoma / Glioma': { code: 'GBM', oncoTree: 'GBM', icdO3: '9440/3', system: 'Central Nervous System' },
 };
 
+export const evaluateMockPrediction = predictTumorOfOrigin;
+

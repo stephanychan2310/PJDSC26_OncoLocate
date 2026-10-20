@@ -74,7 +74,7 @@ export default function HeroResultCard({ prediction, inputs, isCalculating }) {
             <span>{mapping.system}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] tracking-tight font-sans">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] tracking-tight font-sans break-words whitespace-normal leading-snug">
             {prediction.name}
           </h2>
 

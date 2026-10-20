@@ -26,7 +26,7 @@ export default function TopMetricCards({ prediction, inputs }) {
           <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)] block">
             Top Predicted Origin
           </span>
-          <div className="text-lg sm:text-xl font-bold text-[var(--foreground)] leading-tight break-words">
+          <div className="text-lg sm:text-xl font-bold text-[var(--foreground)] leading-snug break-words whitespace-normal">
             {prediction.name}
           </div>
           <span className="inline-flex items-center text-[10px] font-bold text-[var(--sidebar-accent-foreground)] bg-[var(--sidebar-accent)] px-2 py-0.5 rounded-full border border-teal-200/60 dark:border-teal-700/60 font-mono">

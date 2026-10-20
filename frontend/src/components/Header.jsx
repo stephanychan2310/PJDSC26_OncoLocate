@@ -4,7 +4,8 @@ import {
   RefreshCw, 
   ChevronDown,
   Moon,
-  Sun
+  Sun,
+  Menu
 } from 'lucide-react';
 import { PRESET_CASES } from '../data/mockModel';
 
@@ -12,34 +13,69 @@ export default function Header({
   onSelectPreset, 
   onResetBaseline, 
   isCalculating, 
+  isLiveModel = false,
   currentPresetId,
   onPrint,
   isDark,
-  onToggleDark
+  onToggleDark,
+  onOpenMobileMenu
 }) {
   return (
-    <header className="h-16 px-6 border-b border-[var(--border)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-between sticky top-0 z-30 select-none">
+    <header className="h-[72px] px-4 sm:px-6 border-b border-[var(--border)] bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex items-center justify-between sticky top-0 z-30 select-none gap-3 sm:gap-4">
       
-      {/* Search Input: subtle rounded container with command badge */}
-      <div className="rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-1.5 flex items-center gap-2 w-72 sm:w-80 shadow-2xs">
-        <Search className="w-3.5 h-3.5 text-[var(--muted-foreground)] shrink-0 pointer-events-none" />
-        <input
-          type="text"
-          placeholder="Search patient, gene, or cohort..."
-          className="bg-transparent text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none flex-1 min-w-0"
-        />
-        <kbd className="text-[10px] font-mono bg-slate-200/60 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded">
-          ⌘K
-        </kbd>
+      {/* Left Area: Mobile Hamburger + Expanded Search Input */}
+      <div className="flex items-center flex-1 max-w-xl min-w-0">
+        {/* Mobile Hamburger Toggle */}
+        {onOpenMobileMenu && (
+          <button
+            type="button"
+            onClick={onOpenMobileMenu}
+            className="lg:hidden p-2 -ml-1 mr-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-lg hover:bg-[var(--muted)] transition-colors cursor-pointer shrink-0"
+            aria-label="Open navigation menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* Taller, wider responsive search input */}
+        <div className="h-11 px-3.5 rounded-xl border border-[var(--border)] bg-[var(--background)] flex items-center gap-2.5 shadow-2xs w-full">
+          <Search className="w-4 h-4 text-[var(--muted-foreground)] shrink-0 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search patient, gene, or cohort..."
+            className="bg-transparent text-xs sm:text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none flex-1 min-w-0"
+          />
+          <kbd className="hidden sm:inline-flex text-[11px] font-mono bg-slate-200/60 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md">
+            ⌘K
+          </kbd>
+        </div>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center space-x-2.5">
+      <div className="flex items-center space-x-2 sm:space-x-2.5 shrink-0">
         
         {/* Status Badge */}
-        <div className="hidden sm:inline-flex items-center space-x-2 bg-teal-50 dark:bg-teal-950/40 text-[var(--primary)] text-xs font-semibold px-3 py-1.5 rounded-full border border-teal-200/60 dark:border-teal-800/60 shadow-2xs">
-          <span className="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse" />
-          <span>{isCalculating ? 'Evaluating...' : 'System Online / Model Ready'}</span>
+        <div className={`hidden sm:inline-flex items-center space-x-2 text-xs font-semibold px-3 py-1.5 rounded-full border shadow-2xs transition-colors ${
+          isCalculating
+            ? 'bg-teal-50 dark:bg-teal-950/40 text-[var(--primary)] border-teal-200/60 dark:border-teal-800/60'
+            : isLiveModel
+            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200/70 dark:border-emerald-800/70'
+            : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200/70 dark:border-amber-800/70'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${
+            isCalculating
+              ? 'bg-[var(--primary)] animate-pulse'
+              : isLiveModel
+              ? 'bg-emerald-500 animate-pulse'
+              : 'bg-amber-500'
+          }`} />
+          <span>
+            {isCalculating
+              ? 'Evaluating...'
+              : isLiveModel
+              ? 'Live Model (Flask)'
+              : 'Demo Mode (Mock)'}
+          </span>
         </div>
 
         {/* Preset Selector */}
@@ -52,7 +88,7 @@ export default function Header({
                 onSelectPreset(e.target.value);
               }
             }}
-            className="appearance-none bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] text-slate-700 dark:text-slate-200 text-xs rounded-lg pl-3 pr-8 py-1.5 font-medium transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-600 shadow-2xs"
+            className="appearance-none bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] text-slate-700 dark:text-slate-200 text-xs rounded-lg pl-3 pr-8 py-2 font-medium transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-600 shadow-2xs max-w-[130px] sm:max-w-none truncate"
           >
             <option value="">Case Benchmark...</option>
             {PRESET_CASES.map((preset) => (
@@ -68,10 +104,10 @@ export default function Header({
         <button
           type="button"
           onClick={onPrint}
-          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] rounded-lg transition-colors shadow-2xs cursor-pointer"
+          className="inline-flex items-center px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] rounded-lg transition-colors shadow-2xs cursor-pointer"
           title="Print or export clinical report"
         >
-          <Printer className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
+          <Printer className="w-3.5 h-3.5 sm:mr-1.5 text-slate-400" />
           <span className="hidden sm:inline">Export</span>
         </button>
 
@@ -79,7 +115,7 @@ export default function Header({
         <button
           type="button"
           onClick={onResetBaseline}
-          className="inline-flex items-center px-2.5 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] rounded-lg transition-colors shadow-2xs cursor-pointer"
+          className="inline-flex items-center px-2.5 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] rounded-lg transition-colors shadow-2xs cursor-pointer"
           title="Reset baseline values"
         >
           <RefreshCw className="w-3.5 h-3.5 text-slate-400 sm:mr-1.5" />
@@ -90,7 +126,7 @@ export default function Header({
         <button
           type="button"
           onClick={onToggleDark}
-          className="inline-flex items-center justify-center p-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] rounded-lg transition-colors shadow-2xs cursor-pointer"
+          className="inline-flex items-center justify-center p-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[var(--border)] rounded-lg transition-colors shadow-2xs cursor-pointer"
           title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
