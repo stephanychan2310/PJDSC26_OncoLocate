@@ -50,12 +50,19 @@ export default function App() {
   const [liveInference, setLiveInference] = useState(true);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard' | 'cohort' | 'protocol' | 'settings'
-  const [isDark, setIsDark] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const currentPresetIdRef = useRef(currentPresetId);
   const inferenceTimeoutRef = useRef(null);
+
+  const [isDark, setIsDark] = useState(() => {
+    // Check if the user's OS is set to dark mode
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
     currentPresetIdRef.current = currentPresetId;
